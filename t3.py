@@ -53,7 +53,7 @@ def sum_and_sort_columns(df):
     # Filter out rows where the total sum is 0
     df = df[df['Total Sum'] > 0]
 
-    df['Zip Code'] = df['Zip Code'].astype(str).apply(lambda x: x.zfill(9) if len(x) in [6, 7, 8] else x.zfill(5) if len(x) == 5 else x)
+    df['Zip code'] = df['Zip code'].astype(str).apply(lambda x: x.zfill(9) if len(x) in [6, 7, 8] else x.zfill(5) if len(x) == 5 else x)
 
     
     # Sort the DataFrame by 'Total Sum' in descending order
@@ -119,7 +119,7 @@ def generate_visualizations(df, selected_drugs):
 
     def plot_bar_chart(data, title, ylabel):
         if data.empty or data.sum() == 0:
-            st.warning(f"No data available for {title}")
+            # st.warning(f"No data available for {title}")
             return
 
         fig_bar, ax_bar = plt.subplots(figsize=(12, 8))
@@ -178,7 +178,7 @@ def main():
         'Provider Second Line Business Mailing Address',
         'City',
         'State',
-        'Zip Code',
+        'Zip code',
         'Primary_Classification', 'Primary_Specialization', 'Definition',
         'Notes', 'Display Name', 'Section', 'Secondary_Classification',
         'Secondary_Specialization', 'Definition.1', 'Notes.1', 'Display Name.1',
@@ -196,7 +196,15 @@ def main():
     if selected_drugs:
         filtered_df = filter_columns(df, selected_drugs, common_columns)
         filtered_df = sum_and_sort_columns(filtered_df)
+        filtered_df = filtered_df.reset_index(drop=True)
+
+        # highlighted_df = filtered_df.style.applymap(lambda x: 'background-color: yellow')
+        # st.write(highlighted_df)
         st.write(filtered_df)
+        # st.write(filtered_df.to_html(index=False))
+        # pd.set_option("styler.render.max_elements", 814476)
+
+
         generate_visualizations(filtered_df, selected_drugs)
 
 if __name__ == "__main__":
